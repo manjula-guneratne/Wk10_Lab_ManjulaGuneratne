@@ -8,12 +8,14 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
@@ -237,9 +239,11 @@ public class Main extends Application {
 		    // Save user
 		    try {
 				userDao.saveUser(user);
+				this.alert("Save", "Successful!", AlertType.INFORMATION);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				this.alert("Error", "Failed!", AlertType.ERROR);
 			}
 
 		    // Optional: show confirmation
@@ -251,6 +255,15 @@ public class Main extends Application {
 		primaryStage.setScene(scene);
 
 		primaryStage.show();
+	}
+	
+	public void alert(String title, String message, AlertType alertType) {
+		Alert alert = new Alert(alertType);
+		alert.setTitle(title);
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+
+		alert.showAndWait();
 	}
 	
 	public static void main(String[] args) {

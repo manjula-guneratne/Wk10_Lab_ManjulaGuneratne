@@ -17,7 +17,7 @@ public class UserDao {
 	        connection.setAutoCommit(false);
 
 	        // Updated SQL to match your User fields
-	        String query = "INSERT INTO user(full_name, current_address, contact_number, email_address, highest_education, gender, date_available, desired_pos, desired_salary, legal_work_auth, rel_working_here, further_explanation) "
+	        String query = "INSERT INTO Application(full_name, current_address, contact_number, email_address, highest_education, gender, date_available, desired_pos, desired_salary, legal_work_auth, rel_working_here, further_explanation) "
 	                     + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	        
 	        statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
