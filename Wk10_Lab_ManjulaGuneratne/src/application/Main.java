@@ -1,5 +1,6 @@
 package application;
 	
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 import javafx.application.Application;
@@ -10,24 +11,24 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import javafx.scene.layout.ColumnConstraints;
 
 
 public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
+		
+		UserDao userDao = new UserDao();
+		
 		primaryStage.setTitle("Week10_Lab: Manjula Guneratne");
 
 		GridPane grid = new GridPane();
@@ -142,8 +143,6 @@ public class Main extends Application {
 		desiredSalaryTextField.setMaxWidth(Double.MAX_VALUE);
 		grid.add(desiredSalaryTextField, 1, 8, 3,1);
 		
-		//************
-		
 		Label legalAuthLabel = new Label("Are you legally autherized to work in the country?");
 		grid.add(legalAuthLabel, 0, 9, 2 ,1);
 		
@@ -166,8 +165,6 @@ public class Main extends Application {
 		//Add VBox to your GridPane
 		grid.add(legalAuthRadioButtons, 0, 10, 2, 1);
 				
-		//*****
-		
 		Label relWoringLabel = new Label("Are you legally autherized to work in the country?");
 		grid.add(relWoringLabel, 0, 11, 2 ,1);
 		
@@ -207,6 +204,47 @@ public class Main extends Application {
 		
 		hBox.getChildren().add(saveButton);
 		grid.add(hBox, 0, 15, 2, 1);
+		
+		saveButton.setOnAction(actionEvent -> {
+		    String fullName = fullnameTextField.getText().trim();
+		    String currentAddress = currentAddressTextField.getText().trim();
+		    String contactNumber = contactNumberTextField.getText().trim();
+		    String email = emailTextField.getText().trim();
+		    String highestEducation = educationlevelTextField.getText().trim();
+		    String gender = group.getSelectedToggle() != null ? group.getSelectedToggle().getUserData().toString() : "";
+		    LocalDate dateAvailable = date.getValue();
+		    String desiredPos = desiredPositionTextField.getText().trim();
+		    String desiredSalary = desiredSalaryTextField.getText().trim();
+		    String legalWorkAuth = legalAuthGroup.getSelectedToggle() != null ? legalAuthGroup.getSelectedToggle().getUserData().toString() : "";
+		    String relWorkingHere = relWoringGroup.getSelectedToggle() != null ? relWoringGroup.getSelectedToggle().getUserData().toString() : "";
+		    String furtherExplanation = explainfurtherTextField.getText().trim();
+
+		    // Create User object
+		    User user = new User();
+		    user.setFullName(fullName);
+		    user.setCurrentAddress(currentAddress);
+		    user.setContactNumber(contactNumber);
+		    user.setEmailAddress(email);
+		    user.setHighestEducation(highestEducation);
+		    user.setGender(gender);
+		    user.setDateAvailable(dateAvailable != null ? dateAvailable.toString() : "");
+		    user.setDesiredPos(desiredPos);
+		    user.setDesiredSalary(desiredSalary);
+		    user.setLegalWorkAuth(legalWorkAuth);
+		    user.setRelWorkingHere(relWorkingHere);
+		    user.setFurtherExplanation(furtherExplanation);
+
+		    // Save user
+		    try {
+				userDao.saveUser(user);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		    // Optional: show confirmation
+		    System.out.println("User saved successfully!");
+		});
 		
 		
 		Scene scene = new Scene(grid, 750, 600);
