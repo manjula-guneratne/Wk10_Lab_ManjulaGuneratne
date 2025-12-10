@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
@@ -25,7 +26,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.layout.ColumnConstraints;
+import javafx.beans.binding.Bindings;
 
 
 public class Main extends Application {
@@ -34,7 +38,7 @@ public class Main extends Application {
 		
 		UserDao userDao = new UserDao();
 		
-		primaryStage.setTitle("Week10_Lab: Manjula Guneratne");
+		primaryStage.setTitle("FinalExam: Manjula Guneratne");
 
 		GridPane grid = new GridPane();
 		grid.setAlignment(Pos.CENTER);
@@ -54,12 +58,61 @@ public class Main extends Application {
 		grid.getColumnConstraints().addAll(col0, col1, col2, col3);
 
 		Text scenetitle = new Text("Employment Application");
-		scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-		grid.add(scenetitle, 0, 0, 2, 1);
+		scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 30));
+		scenetitle.setFill(javafx.scene.paint.Color.WHITE);
+		
+		//Black Background rectangle
+		Rectangle bgRect = new Rectangle();
+		bgRect.setFill(javafx.scene.paint.Color.BLACK);
+		bgRect.setArcHeight(10);
+		bgRect.setArcWidth(10);
+		
+		//Bind rectangle size to text (auto-resize)
+		bgRect.widthProperty().bind(Bindings.createDoubleBinding(
+			    () -> scenetitle.getBoundsInLocal().getWidth() + 20,
+			    scenetitle.boundsInLocalProperty()
+			));
+			
+		bgRect.heightProperty().bind(Bindings.createDoubleBinding(
+		    () -> scenetitle.getBoundsInLocal().getHeight() + 10,
+		    scenetitle.boundsInLocalProperty()
+		));
+		
+		//Stack ontop of the black rectangle
+		StackPane titleContainer = new StackPane(bgRect, scenetitle);
+		StackPane.setAlignment(scenetitle, Pos.CENTER);
+		GridPane.setHalignment(titleContainer, HPos.RIGHT);
+	
+		grid.add(titleContainer, 0, 0, 2, 1);
 		
 		Text personInfoSubtitle = new Text("Personal Information");
-		personInfoSubtitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 16));
-		grid.add(personInfoSubtitle, 0, 1, 2, 1);
+		personInfoSubtitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 16));		
+		personInfoSubtitle.setFill(javafx.scene.paint.Color.WHITE);
+		
+		//Black Background rectangle
+		Rectangle bgRect2 = new Rectangle();
+		bgRect2.setFill(javafx.scene.paint.Color.BLACK);
+		bgRect2.setArcHeight(10);
+		bgRect2.setArcWidth(10);
+		
+		//Bind rectangle size to text (auto-resize)
+		bgRect2.widthProperty().bind(Bindings.createDoubleBinding(
+			    () -> personInfoSubtitle.getBoundsInLocal().getWidth() + 10,
+			    personInfoSubtitle.boundsInLocalProperty()
+			));
+			
+		bgRect2.heightProperty().bind(Bindings.createDoubleBinding(
+		    () -> personInfoSubtitle.getBoundsInLocal().getHeight() + 5,
+		    personInfoSubtitle.boundsInLocalProperty()
+		));
+		
+		//Stack ontop of the black rectangle
+		StackPane personInfoContainer = new StackPane(bgRect2, personInfoSubtitle);
+		StackPane.setAlignment(personInfoSubtitle, Pos.CENTER);
+		GridPane.setHalignment(personInfoContainer, HPos.RIGHT);		
+		
+		
+		grid.add(personInfoContainer, 0, 1, 1, 1);
 
 		Label fullNameLabel = new Label("Full Name:");
 		grid.add(fullNameLabel, 0, 2);
@@ -125,7 +178,7 @@ public class Main extends Application {
 		ComboBox<String> educationComboBox = new ComboBox<>(FXCollections.observableArrayList(educationlevels));
 		educationComboBox.setPromptText("Select Education Level");
 		//Combo box selection is collected here
-		String educationlevelComboBox = educationComboBox.getValue();
+		//String educationlevelComboBox = educationComboBox.getValue();
 		
 		grid.add(educationComboBox, 1, 5);
 		
@@ -153,8 +206,32 @@ public class Main extends Application {
 		grid.add(gridForRadioButtons, 3, 5, 2, 1);
 		
 		Text empEligibiltySubtitle = new Text("Employment Eligibility");
-		empEligibiltySubtitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 16));
-		grid.add(empEligibiltySubtitle, 0, 6, 2, 1);
+		empEligibiltySubtitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 16));		
+		empEligibiltySubtitle.setFill(javafx.scene.paint.Color.WHITE);
+		
+		//Black Background rectangle
+		Rectangle bgRect3 = new Rectangle();
+		bgRect3.setFill(javafx.scene.paint.Color.BLACK);
+		bgRect3.setArcHeight(10);
+		bgRect3.setArcWidth(10);
+		
+		//Bind rectangle size to text (auto-resize)
+		bgRect3.widthProperty().bind(Bindings.createDoubleBinding(
+			    () -> empEligibiltySubtitle.getBoundsInLocal().getWidth() + 10,
+			    empEligibiltySubtitle.boundsInLocalProperty()
+			));
+			
+		bgRect3.heightProperty().bind(Bindings.createDoubleBinding(
+		    () -> empEligibiltySubtitle.getBoundsInLocal().getHeight() + 5,
+		    empEligibiltySubtitle.boundsInLocalProperty()
+		));
+		
+		//Stack ontop of the black rectangle
+		StackPane empEligibiltyContainer = new StackPane(bgRect3, empEligibiltySubtitle);
+		StackPane.setAlignment(empEligibiltySubtitle, Pos.CENTER);
+		GridPane.setHalignment(empEligibiltyContainer, HPos.RIGHT);		
+				
+		grid.add(empEligibiltyContainer, 0, 6, 1, 1);
 		
 		Label dateLabel = new Label("Date Available:");
 		grid.add(dateLabel, 0, 7);
@@ -258,7 +335,7 @@ public class Main extends Application {
 		TextField explainfurtherTextField = new TextField();
 		GridPane.setHgrow(explainfurtherTextField, Priority.ALWAYS);
 		explainfurtherTextField.setMaxWidth(Double.MAX_VALUE);
-		grid.add(explainfurtherTextField, 1, 13, 3,1);					
+		grid.add(explainfurtherTextField, 1, 13, 3,1);		
 
 		Button saveButton = new Button("Save");
 		HBox hBox = new HBox(10);
@@ -360,7 +437,6 @@ public class Main extends Application {
 				explainfurtherTextField.clear();
 				
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				this.alert("Error", "Failed!", AlertType.ERROR);
 			}
