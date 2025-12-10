@@ -4,12 +4,14 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -118,8 +120,14 @@ public class Main extends Application {
 		Label educationlevelLabel = new Label("Highest Educational Attainment:");
 		grid.add(educationlevelLabel, 0, 5);
 
-		TextField educationlevelTextField = new TextField();
-		grid.add(educationlevelTextField, 1, 5);
+		String educationlevels[] = {"Masters","Bachelors","College Diploma"};
+		
+		ComboBox<String> educationComboBox = new ComboBox<>(FXCollections.observableArrayList(educationlevels));
+		educationComboBox.setPromptText("Select Education Level");
+		//Combo box selection is collected here
+		String educationlevelComboBox = educationComboBox.getValue();
+		
+		grid.add(educationComboBox, 1, 5);
 		
 		Label genderLabel = new Label("Gender:");
 		grid.add(genderLabel, 2, 5);
@@ -267,7 +275,7 @@ public class Main extends Application {
 		    String currentAddress = currentAddressTextField.getText().trim();
 		    String contactNumber = contactNumberTextField.getText().trim();
 		    String email = emailTextField.getText().trim();
-		    String highestEducation = educationlevelTextField.getText().trim();
+		    String highestEducation = educationlevelComboBox.trim(); 
 		    String gender = group.getSelectedToggle() != null ? group.getSelectedToggle().getUserData().toString() : "";
 		    LocalDate dateAvailable = date.getValue();
 		    String desiredPos = desiredPositionTextField.getText().trim();
@@ -332,7 +340,7 @@ public class Main extends Application {
 				currentAddressTextField.clear();
 				contactNumberTextField.clear();
 				emailTextField.clear();
-				educationlevelTextField.clear();
+				educationComboBox.getSelectionModel().clearSelection();
 				group.selectToggle(null);
 				date.setValue(null);
 				desiredPositionTextField.clear();
