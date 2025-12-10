@@ -275,7 +275,12 @@ public class Main extends Application {
 		    String currentAddress = currentAddressTextField.getText().trim();
 		    String contactNumber = contactNumberTextField.getText().trim();
 		    String email = emailTextField.getText().trim();
-		    String highestEducation = educationlevelComboBox.trim(); 
+		    String highestEducation = educationComboBox.getValue();  // Fetch from ComboBox
+		    if (highestEducation != null) {
+		        highestEducation = highestEducation.trim();
+		    } else {
+		        highestEducation = "";  // Default if unselected
+		    }
 		    String gender = group.getSelectedToggle() != null ? group.getSelectedToggle().getUserData().toString() : "";
 		    LocalDate dateAvailable = date.getValue();
 		    String desiredPos = desiredPositionTextField.getText().trim();
@@ -313,6 +318,11 @@ public class Main extends Application {
 		    if (legalWorkAuth.isEmpty()) {
 		    	alert("Validation Error", "Please indicate legal work autherization",  AlertType.ERROR);
 		    	return;
+		    }
+		    
+		    if (highestEducation.isEmpty()) {
+		        alert("Validation Error", "Please select highest education level", AlertType.ERROR);
+		        return;
 		    }
 
 		    // Create User object

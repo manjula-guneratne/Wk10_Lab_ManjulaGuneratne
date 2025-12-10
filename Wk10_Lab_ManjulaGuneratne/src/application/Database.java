@@ -8,7 +8,7 @@ public class Database {
 	
 	  //private static final Logger logger = Logger.getLogger(Database.class.getName());
 		private static final String DB_DRIVER = "com.mysql.cj.jdbc.Driver";
-		private static final String DB_CONNECTION = "jdbc:mysql://localhost/Finals_DB_ManjulaGuneratne";
+		private static final String DB_CONNECTION = "jdbc:mysql://localhost/finals_db_manjulaGuneratne";
 		private static final String DB_USER = "root";
 		private static final String DB_PASSWORD = "Man@8809";
 		
