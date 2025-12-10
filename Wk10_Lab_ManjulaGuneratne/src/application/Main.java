@@ -14,6 +14,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
@@ -64,6 +65,19 @@ public class Main extends Application {
 		TextField fullnameTextField = new TextField();
 		GridPane.setHgrow(fullnameTextField, Priority.ALWAYS);
 		fullnameTextField.setMaxWidth(Double.MAX_VALUE);
+		
+		//Validation: Limit to 50 Characters,
+		fullnameTextField.setTextFormatter(new TextFormatter<>(change -> {
+			String newText = change.getControlNewText();
+			if(newText.length() > 50) {
+				return null;
+			}
+			if (newText.matches("[A-Za-z ]*")) {
+				return change; //Accepts letters and spaces only
+			}
+			return null;
+		}));
+				
 		//grid.add(fullnameTextField, 1, 1);
 		grid.add(fullnameTextField, 1, 2, 3, 1);  // span 3 columns
 
@@ -80,6 +94,19 @@ public class Main extends Application {
 		grid.add(contactNumberLabel, 0, 4);
 
 		TextField contactNumberTextField = new TextField();
+		
+		//Validation: Limit to 50 Characters,
+		contactNumberTextField.setTextFormatter(new TextFormatter<>(change -> {
+			String newText = change.getControlNewText();
+			if(newText.length() > 10) {
+				return null;
+			}
+			if (newText.matches("\\d*")) {
+				return change; //Accepts digits only
+			}
+			return null;
+		}));
+				
 		grid.add(contactNumberTextField, 1, 4);
 
 		Label emailLabel = new Label("Email Address:");
@@ -126,6 +153,17 @@ public class Main extends Application {
 
 		DatePicker date = new DatePicker();
 		date.setPromptText("mm/dd/yyyy");
+				
+		// Disables past dates - only future date selection possible
+		date.setDayCellFactory(picker -> new javafx.scene.control.DateCell() {
+		    @Override
+		    public void updateItem(LocalDate date, boolean empty) {
+		        super.updateItem(date, empty);
+		        LocalDate today = LocalDate.now();
+		        setDisable(empty || date.isBefore(today));  // Disables previous dates
+		    }
+		});
+		
 		grid.add(date, 1, 7);
 		
 		//Get the selected date
@@ -143,6 +181,23 @@ public class Main extends Application {
 		TextField desiredSalaryTextField = new TextField();
 		GridPane.setHgrow(desiredSalaryTextField, Priority.ALWAYS);
 		desiredSalaryTextField.setMaxWidth(Double.MAX_VALUE);
+		
+		//Salary validation: 8 digits followed by 2 decimal places
+		desiredSalaryTextField.setTextFormatter(new TextFormatter<>(change -> {
+		    String newText = change.getControlNewText();
+		    
+		    // Allow empty string
+		    if(newText.isEmpty()) {
+		    	return change;
+		    }
+		    
+		    if(newText.matches("\\d{0,8}(\\.\\d{0,2})?")) {
+		    	return change;
+		    }
+		    
+		    return null;
+		}));
+		
 		grid.add(desiredSalaryTextField, 1, 8, 3,1);
 		
 		Label legalAuthLabel = new Label("Are you legally autherized to work in the country?");
@@ -220,6 +275,37 @@ public class Main extends Application {
 		    String legalWorkAuth = legalAuthGroup.getSelectedToggle() != null ? legalAuthGroup.getSelectedToggle().getUserData().toString() : "";
 		    String relWorkingHere = relWoringGroup.getSelectedToggle() != null ? relWoringGroup.getSelectedToggle().getUserData().toString() : "";
 		    String furtherExplanation = explainfurtherTextField.getText().trim();
+		    
+		    //Validation before saving
+		    if(fullName.isEmpty()) {
+		    	alert("Validation Error","Full name is required", AlertType.ERROR);
+		    	return;
+		    }
+		    
+		    if(contactNumber.length() != 10) {
+		    	alert("Validation Error", "Contact number must be exactly 10 digits",  AlertType.ERROR);
+		    	return;
+		    }
+		    
+		    if(email.isEmpty() || !email.contains("@")) {
+		    	alert("Validation Error", "Please enter a valid email address",  AlertType.ERROR);
+		    	return;
+		    }
+		    
+		    if(gender.isEmpty()) {
+		    	alert("Validation Error", "Please select a gender",  AlertType.ERROR);
+		    	return;
+		    }
+		    
+		    if(dateAvailable == null) {
+		    	alert("Validation Error", "Please select a date available",  AlertType.ERROR);
+		    	return;
+		    }
+		    
+		    if (legalWorkAuth.isEmpty()) {
+		    	alert("Validation Error", "Please indicate legal work autherization",  AlertType.ERROR);
+		    	return;
+		    }
 
 		    // Create User object
 		    User user = new User();
@@ -240,6 +326,21 @@ public class Main extends Application {
 		    try {
 				userDao.saveUser(user);
 				this.alert("Save", "Successful!", AlertType.INFORMATION);
+				
+				// Clear form after successful save
+				fullnameTextField.clear();
+				currentAddressTextField.clear();
+				contactNumberTextField.clear();
+				emailTextField.clear();
+				educationlevelTextField.clear();
+				group.selectToggle(null);
+				date.setValue(null);
+				desiredPositionTextField.clear();
+				desiredSalaryTextField.clear();
+				legalAuthGroup.selectToggle(null);
+				relWoringGroup.selectToggle(null);
+				explainfurtherTextField.clear();
+				
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
